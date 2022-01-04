@@ -1,6 +1,14 @@
 class Clue
   attr_reader :letter, :position, :color
 
+  CODES = {
+    green: '+',
+    yellow: '-',
+    black: 'x'
+  }.freeze
+
+  INVERSE_CODES = CODES.invert.freeze
+
   def initialize(letter:, position:, color:)
     @letter = letter
     @position = position
@@ -33,6 +41,17 @@ class Clue
     else
       !word.include?(letter)
     end
+  end
+
+  def encode
+    "#{letter}#{CODES[color]}#{position}"
+  end
+
+  def self.decode(code)
+    letter = code[0]
+    color = INVERSE_CODES[code[1]]
+    position = code[2].to_i
+    new(letter: letter, color: color, position: position)
   end
 
   def self.from_guess(guess, answer)
